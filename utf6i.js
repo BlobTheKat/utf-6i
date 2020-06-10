@@ -64,17 +64,19 @@
       if(nums[i]==32){res+="000000"}
       if(nums[i]==95){res+="111111000000"}
     }
-    if(outputMode.toString().match(/base|64/i)){
+    if(outputMode.toString().match(/base|64|true|1/i)){
       var y="";
       res.match(/.{6}/g).forEach(function(itm){
         y+=btoa(String.fromCharCode(parseInt(itm,2)<<2))[0];
       })
       return y;
     }else if(outputMode.toString().match(/UTF|TEXT|NORM|16|false|0/i)){
-      res += "1".repeat((16-res.length%16)%16)
-      res.match(/.{16}/g).forEach(function(itm){
+      var y="";
+      res += "1".repeat((16-res.length%16)%16);
+      (res.match(/.{16}/g)||[]).forEach(function(itm){
         y+=String.fromCharCode(parseInt(itm,2));
       })
+      return y;
     }
     return res;
   }
@@ -83,19 +85,18 @@
     var nums = [];
     var x = Array.from(bin);
     x.forEach(function(itm, ind){
-      if(ind%6==0){
-        var c;
-        if(outputMode.toString().match(/base|64|true|1/i)){
-          c = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".indexOf(itm)
-        }else if(outputMode.toString().match(/UTF|TEXT|NORM|16|false|0/i) && ind%3 == 0){
-          digs.push.apply(digs, x.slice(ind,ind+3).split("").map(function(a){return ("0".repeat(16)+a.charCodeAt(0).toString(2)).slice(-16)}).join("").match(/.{6}/g));
-        }else if(ind&6 == 0){
-          c = parseInt(x.slice(ind,ind+6).join(""), 2)
-        }else{
-          return
-        }
-        digs.push(c);
+      var c;
+      if(inputMode.toString().match(/base|64|true|1/i)){
+        c = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".indexOf(itm)
+      }else if(inputMode.toString().match(/UTF|TEXT|NORM|16|false|0/i) && ind%3 == 0){
+        digs.push.apply(digs, ((bin.slice(ind,ind+3)+"\uffff\uffff\uffff").slice(0,3).split("").map(function(a){return ("0".repeat(16)+a.charCodeAt(0).toString(2)).slice(-16)}).join("").replace(/(1{6})+$/,"").match(/.{6}/g)).map(function(a){return parseInt(a, 2)}));
+        return;
+      }else if(ind%6 == 0 && !inputMode.toString().match(/UTF|TEXT|NORM|16|false|0/i)){
+        c = parseInt(x.slice(ind,ind+6).join(""), 2)
+      }else{
+        return
       }
+      digs.push(c);
     });
     var carry = [];
     var symbolsN = [46, 44, 58, 59, 33, 63, 45, 34, 40, 41];
@@ -167,7 +168,7 @@
         carry = []
       }
     }
-    return nums.map(function(a){return String.fromCodePoint(a)});
+    return nums.map(function(a){return String.fromCodePoint(a)}).join("");
   }
   var mod = {_range: range, encode: toUtf6i, decode: fromUtf6i};
   (function (root, factory) {
