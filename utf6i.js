@@ -25,7 +25,7 @@
     } 
     return {range: x};
   }
-  function toUtf6i(txt, base64 = false){
+  function toUtf6i(txt, outputMode = "TEXT"){
     txt = Array.from(txt);
     var res = "";
     var nums = [];
@@ -64,33 +64,37 @@
       if(nums[i]==32){res+="000000"}
       if(nums[i]==95){res+="111111000000"}
     }
-    if(base64){
+    if(outputMode.toString().match(/base|64/i)){
       var y="";
       res.match(/.{6}/g).forEach(function(itm){
         y+=btoa(String.fromCharCode(parseInt(itm,2)<<2))[0];
       })
       return y;
+    }else if(outputMode.toString().match(/UTF|TEXT|NORM|16|false|0/i)){
+      res += "1".repeat((16-res.length%16)%16)
+      res.match(/.{16}/g).forEach(function(itm){
+        y+=String.fromCharCode(parseInt(itm,2));
+      })
     }
     return res;
   }
-  chunkArr=function(arr,chunkSize) {
-    var array = Array.from(arr);
-    return [].concat.apply([],
-      array.map(function(elem, i) {
-        return i % chunkSize ? [] : [array.slice(i, i + chunkSize)];
-      })
-    );
-  }
-  function fromUtf6i(bin, isb64=false){
+  function fromUtf6i(bin, inputMode="TEXT"){
     var digs = [];
     var nums = [];
     var x = Array.from(bin);
-    x.forEach(function(itm, ind, z){
-      if(isb64){
-        digs.push("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".indexOf(itm))
-      }else if(ind%6==0){
-        parseInt(z=x.slice(ind,ind+6).join(""), 2)-(((z)[0]=="1"&&signed)?(2**((z).length)):0)
-        digs.push();
+    x.forEach(function(itm, ind){
+      if(ind%6==0){
+        var c;
+        if(outputMode.toString().match(/base|64|true|1/i)){
+          c = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".indexOf(itm)
+        }else if(outputMode.toString().match(/UTF|TEXT|NORM|16|false|0/i) && ind%3 == 0){
+          digs.push.apply(digs, x.slice(ind,ind+3).split("").map(function(a){return ("0".repeat(16)+a.charCodeAt(0).toString(2)).slice(-16)}).join("").match(/.{6}/g));
+        }else if(ind&6 == 0){
+          c = parseInt(x.slice(ind,ind+6).join(""), 2)
+        }else{
+          return
+        }
+        digs.push(c);
       }
     });
     var carry = [];
@@ -163,11 +167,7 @@
         carry = []
       }
     }
-    var txt = "";
-    chunkArr(nums, 1024).forEach(function(itm){
-      txt+=String.fromCodePoint(...itm)
-    });
-    return txt;
+    return nums.map(function(a){return String.fromCodePoint(a)});
   }
   var mod = {_range: range, encode: toUtf6i, decode: fromUtf6i};
   (function (root, factory) {
