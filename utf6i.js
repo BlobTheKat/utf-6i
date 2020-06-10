@@ -1,6 +1,11 @@
 !(function(){
+  function toBin(num, c = 1){
+    return ("0".repeat(18) + num.toString(2)).slice(-6*c);
+  }
   function range(val, min, max, callback){
-    var prev = false, all = true, any = false;
+    var prev = false;
+    var all = true;
+    var any = false;
     if(val>=min&&val<=max){
       callback(val-min, val);
       prev = true;
@@ -29,40 +34,40 @@
     }
     for(var i in nums){
       range(nums[i], 97, 122, function(r){
-        res+=(toBin(r+1, 6));
+        res+=(toBin(r+1));
       }).range(65, 90, function(r){
-        res+=("111111"+toBin(r+1, 6));
+        res+=("111111"+toBin(r+1));
       }).range(48, 57, function(r){
-        res+=(toBin(r+27, 6));
+        res+=(toBin(r+27));
       }).range(0, 31, function(r){
-        res+="110011000000"+toBin(r, 6);
-      }).range(126, 127, function(r){res+="110011000001"+toBin(r, 6);
+        res+="110011000000"+toBin(r);
+      }).range(126, 127, function(r){res+="110011000001"+toBin(r);
       }).range(0x2500, 0x25FF, function(r){
-        res+=toBin(Math.floor(r/64)+47, 6)+toBin(r%64, 6);
+        res+=toBin(Math.floor(r/64)+47)+toBin(r%64);
       }).range(0x1F600, 0x1F6FF, function(r){
-        res+="111111"+toBin(Math.floor(r/64)+47, 6)+toBin(r%64, 6);
+        res+="111111"+toBin(Math.floor(r/64)+47)+toBin(r%64);
       }).range(128, 0x7FFF, function(r,a,prev,any,all){
         if(any){return}
-        res+=toBin(Math.floor(a/4096)+51, 6)+toBin(a%4096, 12);
+        res+=toBin(Math.floor(a/4096)+51)+toBin(a%4096, 2);
       }).range(0x8000, 0xFFFF, function(r,a,prev,any,all){
         if(any){return}
-        res+="111111"+toBin(Math.floor(r/4096)+51, 6)+toBin(r%4096, 12);
+        res+="111111"+toBin(Math.floor(r/4096)+51)+toBin(r%4096, 2);
       }).range(0x10000, 0x10FFFF, function(r,a,prev,any,all){
         if(any){return}
-        res+=toBin(Math.floor(r/262144)+59, 6)+toBin(r%262144, 18);
+        res+=toBin(Math.floor(r/4**9)+59)+toBin(r%262144, 3);
       })
       range(".,:;!?-\"()>]}&@#%$^*<[{/|\\'`+=".indexOf(String.fromCodePoint(nums[i])), 0, 19, function(r){
-        res+=("111111"+toBin(r+27, 6))
+        res+=("111111"+toBin(r+27))
       }).range(20,29, function(r){
-        res+=(toBin(r+37, 6));
+        res+=(toBin(r+37));
       })
       if(nums[i]==32){res+="000000"}
       if(nums[i]==95){res+="111111000000"}
     }
     if(base64){
-      var y = "";
+      var y="";
       res.match(/.{6}/g).forEach(function(itm){
-        y += btoa(String.fromCharCode(parseInt(itm,2)<<2))[0];
+        y+=btoa(String.fromCharCode(parseInt(itm,2)<<2))[0];
       })
       return y;
     }
@@ -77,13 +82,15 @@
     );
   }
   function fromUtf6i(bin, isb64=false){
-    var digs = [], nums = [];
+    var digs = [];
+    var nums = [];
     var x = Array.from(bin);
-    x.forEach(function(itm, ind){
+    x.forEach(function(itm, ind, z){
       if(isb64){
         digs.push("ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/".indexOf(itm))
       }else if(ind%6==0){
-        digs.push(toNum(x.slice(ind,ind+6).join(""), false));
+        parseInt(z=x.slice(ind,ind+6).join(""), 2)-(((z)[0]=="1"&&signed)?(2**((z).length)):0)
+        digs.push();
       }
     });
     var carry = [];
