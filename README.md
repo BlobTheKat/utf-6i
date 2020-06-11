@@ -59,4 +59,4 @@ UTF-16 with unicode jumble:
 UTF-16: n/a       UTF-6i: 3.1ms/KB (1,000-1,000,000x slower)
   GZip: ~100ms/KB UTF-6i: 3.1ms/KB (30x faster)
 ```
-**Note: ** this project was not made to have the best compression rate or best performance. The goal was to have an overall low performance overhead while still offering 1. Decent compression and 2. fixed block size (always 6bit)
+ **Note:** this project was not made to have the best compression rate or best performance. The goal was to have an overall low performance overhead while still offering 1. Decent compression and 2. fixed block size (always 6bit)
