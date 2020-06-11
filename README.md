@@ -47,9 +47,9 @@ console.log(decoded) //"Hello, World!"
 ### Compression
 UTF-16 with regular english:
 
-`[**Most Common**]` `[4KB]` UTF-16 => `[1.58KB]` UTF-6i (60.4% compression rate)
+**`[Most Common]`** `[4KB]` UTF-16 => `[1.58KB]` UTF-6i (60.4% compression rate)
 UTF-16 JavaScript
-` [*Quite Common*]` `[4KB]` UTF-16 => `[1.89KB]` UTF-6i (52.8% compression rate)
+*` [Quite Common]`* `[4KB]` UTF-16 => `[1.89KB]` UTF-6i (52.8% compression rate)
 UTF-16 with unicode jumble:
 `     [Not Common]` `[4KB]` UTF-16 => `[5.24KB]` UTF-6i (-31% compression rate)
 
