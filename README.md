@@ -46,16 +46,17 @@ console.log(decoded) //"Hello, World!"
 ```
 ### Compression
 UTF-16 with regular english:
-
-**`[Most Common]`** `[4KB]` UTF-16 => `[1.58KB]` UTF-6i (60.4% compression rate)
+```
+ [Most Common] [4KB] UTF-16 => [1.58KB] UTF-6i (60.4% compression rate)
 UTF-16 JavaScript
-*` [Quite Common]`* `[4KB]` UTF-16 => `[1.89KB]` UTF-6i (52.8% compression rate)
+[Quite Common] [4KB] UTF-16 => [1.89KB] UTF-6i (52.8% compression rate)
 UTF-16 with unicode jumble:
-`     [Not Common]` `[4KB]` UTF-16 => `[5.24KB]` UTF-6i (-31% compression rate)
-
+  [Not Common] [4KB] UTF-16 => [5.24KB] UTF-6i (-31% compression rate)
+```
 ### Performance:
 (on intel i5 8GB laptop, running on (new) Edge Browser ES11)
-UTF-16: `n/a`   UTF6-i: `3.1ms/KB` (1,000-1,000,000 times slower)
-GZip: `~100ms/KB` (UTF6i is 30x faster)
-
+```
+UTF-16: n/a       UTF-6i: 3.1ms/KB (1,000-1,000,000x slower)
+  GZip: ~100ms/KB UTF-6i: 3.1ms/KB (30x faster)
+```
 **Note: ** this project was not made to have the best compression rate or best performance. The goal was to have an overall low performance overhead while still offering 1. Decent compression and 2. fixed block size (always 6bit)
