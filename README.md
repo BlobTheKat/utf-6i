@@ -21,7 +21,7 @@ const UTF6I = require("utf-6i")
 let encoded = "ﲁ䰰ￜϵ콈섿翿"
 console.log( UTF6I.decode(encoded) ) //"Hello, World!"
 ```
-Sometimes the mumble-jumble `"ﲁ䰰ￜϵ콈섿翿"` isn't fitted for what you want to do. That's fine! There are 2 other output modes to choose from when encoding / decoding.
+Sometimes the mumble-jumble `"ﲁ䰰ￜϵ콈섿翿"` isn't fitted for what you want to do. That's fine! There are 3 other input/output modes to choose from when encoding / decoding.
 #### base64
 ```js
 const UTF6I = require("utf-6i")
@@ -44,6 +44,18 @@ console.log(encoded) //"11111100100000010100110000110000111111111101110000000011
 let decoded = UTF6I.decode(encoded)
 console.log(decoded) //"Hello, World!"
 ```
+#### UInt8Array
+```js
+const UTF6I = require("utf-6i")
+UTF6I.mode = "uint" //All invalid modes will fallback to this
+
+let encoded = UTF6I.encode("Hello, World!")
+console.log(encoded) //"UInt8Array [252, 129, 76, 48, 255, 220, 3, 245, 207, 72, 193, 63, 127, 255]"
+
+let decoded = UTF6I.decode(encoded)
+console.log(decoded) //"Hello, World!"
+```
+
 ### Compression
 ```
 UTF-16 with regular english:
