@@ -84,7 +84,7 @@ UTF-16 with unicode jumble:
 
 ### Performance:
 
-(on intel i5 8GB laptop, running on (new) Edge Browser ES11)
+(On Intel I5 8th gen, Dual-Core, 8GB RAM Laptop, running on (new chromium) Edge Browser ES2020)
 
 ```
 UTF-16: n/a       UTF-6i: 3.1ms/KB (1,000-1,000,000x slower)
