@@ -65,7 +65,7 @@ const UTF6I = require("utf-6i");
 UTF6I.mode = "uint"; //All invalid modes will fallback to this
 
 let encoded = UTF6I.encode("Hello, World!");
-console.log(encoded); //"UInt8Array [252, 129, 76, 48, 255, 220, 3, 245, 207, 72, 193, 63, 127, 255]"
+console.log(encoded); //Uint8Array [252, 129, 76, 48, 255, 220, 3, 245, 207, 72, 193, 63, 127, 255]
 
 let decoded = UTF6I.decode(encoded);
 console.log(decoded); //"Hello, World!"
@@ -84,11 +84,12 @@ UTF-16 with unicode jumble:
 
 ### Performance:
 
-(On Intel I5 8th gen, Dual-Core, 8GB RAM Laptop, running on (new chromium) Edge Browser ES2020)
+(On Intel I5 8th gen, dual-core, 8GB ram, running on Chromium, ES11)
 
 ```
 UTF-16: n/a       UTF-6i: 3.1ms/KB (1,000-1,000,000x slower)
   GZip: ~100ms/KB UTF-6i: 3.1ms/KB (30x faster)
 ```
 
-**Note:** this project was not made to have the best compression rate or best performance. The goal was to have an overall low performance overhead while still offering 1. Decent compression and 2. fixed block size (always 6bit)
+**Note:** this project was not made to have the best compression rate or best performance. The goal was to offer a way to encode text into smaller-than-a-byte chunks for whatever you need it for, with reasonable performance.
+
